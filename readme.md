@@ -94,6 +94,7 @@ The Flask API is a simple microservice with two main endpoints:
 
 ## 📋 Project Structure (Files and Folders) 
 
+```bash
 .
 ├── app
 │   ├── app.py `Core of the Flask application`
@@ -115,6 +116,8 @@ The Flask API is a simple microservice with two main endpoints:
 ├── service.yaml `File to apply service by kubectl (Public Url to acess application)`
 ├── terraform.tfstate
 └── vpc.tf `File to apply vpc by terraform`
+
+```
   
   
 

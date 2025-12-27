@@ -109,7 +109,7 @@ The Flask API is a simple microservice with two main endpoints:
 │ └── terraform.tfstate
 ├── eks.tf `File to create ECK via Terraform`
 ├── iam.tf `File to apply different functions to EKS via Terraform`
-├── output.tf `File to check if EKS is working after running the **terraform apply** command`
+├── output.tf `File to check if EKS is working after running the (terraform apply) command`
 ├── readme.md
 ├── requirements.txt `Libraries to be automatically installed in Docker via the Dockerfile`
 ├── secret.yaml `File to apply secrets via kubectl`

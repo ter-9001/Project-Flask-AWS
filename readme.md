@@ -97,25 +97,25 @@ The Flask API is a simple microservice with two main endpoints:
 ```bash
 .
 ├── app
-│   ├── app.py `Core of the Flask application`
-│   ├── posts.json `Database of the posts`
-│   └── templates `Folder of templates ( feed and index)`
-│       ├── feed.html `Template of feed page`
-│       └── index.html `Template of main page`
-├── deployment.yaml `File for deployment of image docker on EKS`
-├── Dockerfile `Default Dockerfile to create docker image with the project at folder app`
-├── ecr `Separeted folder to create the ECR ( where the Docker images would be stored) `
-│   ├── ecr.tf `File to apply ECR by terraform`
-│   └── terraform.tfstate
-├── eks.tf `File to create ECK by terraform`
-├── iam.tf `File to apply differents roles on the EKS by terraform`
-├── output.tf `File to check if EKS is working after run terraform apply`
+│ ├── app.py `Flask application core`
+│ ├── posts.json `Post database`
+│ └── templates `Template folder (feed and index)`
+│ ├── feed.html `Feed page template`
+│ └── index.html `Main page template`
+├── deployment.yaml `File for deploying the Docker image on EKS`
+├── Dockerfile `Standard Dockerfile for creating the Docker image with the project in the app folder`
+├── ecr `Separate folder for creating the ECR (where Docker images will be stored)`
+│ ├── ecr.tf `File to apply ECR via Terraform`
+│ └── terraform.tfstate
+├── eks.tf `File to create ECK via Terraform`
+├── iam.tf `File to apply different functions to EKS via Terraform`
+├── output.tf `File to check if EKS is working after running the **terraform apply** command`
 ├── readme.md
-├── requirements.txt `Libraries to be installed automatically on docker by Dockerfile`
-├── secret.yaml `File to apply secret by kubectl`
-├── service.yaml `File to apply service by kubectl (Public Url to acess application)`
+├── requirements.txt `Libraries to be automatically installed in Docker via the Dockerfile`
+├── secret.yaml `File to apply secrets via kubectl`
+├── service.yaml `File to apply services via kubectl (Public URL to access the application)`
 ├── terraform.tfstate
-└── vpc.tf `File to apply vpc by terraform`
+└── vpc.tf `File to apply VPC via Terraform`
 
 ```
   

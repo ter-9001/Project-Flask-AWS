@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Restricted Access - Publishing</title>
+    
+    <style>
+        /* 1. Root Variables for Customization (Must match index.html) */
+        :root {
+            --color-primary: #007BFF; /* Main button/accent color (Vibrant Blue - Success) */
+            --color-secondary: #6c757d; /* Secondary text/border color (Gray) */
+            --color-background: #f8f9fa; /* Light background */
+            --color-card-background: #ffffff; /* Card background (White) */
+            --color-text: #343a40; /* Main text color (Dark Gray) */
+            --color-error: #dc3545; /* Error color (Red) */
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --transition-speed: 0.3s;
+        }
+
+        /* Base Reset and Styling */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            margin: 0; 
+            padding: 0;
+            background-color: var(--color-background); 
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+        
+        header { 
+            text-align: center; 
+            padding: 40px 20px; 
+            background: var(--color-primary); 
+            color: var(--color-card-background); 
+            margin-bottom: 30px; 
+            box-shadow: var(--shadow-light);
+        }
+        header h1 { margin: 0; font-size: 2.5em; }
+        header p { opacity: 0.9; font-size: 15px; }
+        header a{   text-decoration: none; font-size: 13px;  color: var(--color-card-background);  }
+        header a:hover { color: magenta;}
+
+        /* Container for Form */
+        .container { 
+            max-width: 600px; 
+            margin: 50px auto; 
+            background: var(--color-card-background); 
+            padding: 30px; 
+            border-radius: 10px; 
+            box-shadow: var(--shadow-light); 
+        }
+
+        /* Form Elements */
+        label { 
+            display: block; 
+            margin-bottom: 8px; 
+            font-weight: 600; 
+            color: var(--color-text); 
+        }
+        input[type="text"], input[type="password"], textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            transition: border-color var(--transition-speed);
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+        }
+
+        /* Button Styling */
+        button {
+            background-color: var(--color-primary);
+            color: white;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1em;
+            width: 100%;
+            transition: background-color var(--transition-speed);
+        }
+        button:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+
+        /* Message Feedback */
+        #message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
+        .error { background-color: #f8d7da; color: var(--color-error); border: 1px solid #f5c6cb; }
+
+        /* Custom Feedback on Password Field */
+        .token-success {
+            border-color: var(--color-primary) !important;
+            color: var(--color-primary) !important;
+            font-weight: bold;
+        }
+        .token-error {
+            border-color: var(--color-error) !important;
+            color: var(--color-error) !important;
+            font-weight: bold;
+        }
+
+        /* Responsiveness */
+        @media (max-width: 640px) {
+            .container {
+                margin: 20px;
+                padding: 20px;
+            }
+            header {
+                padding: 30px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Restricted Publishing Area (Feed)</h1>
+        <p>For the site owner only (Gabriel Martins). Requires Access Token (Kubernetes Secret).</p>
+        <a href="/"> <span> Click here to go back to home </span> </a>
+    </header>
+
+    <div class="container">
+        <h2>Post New Content</h2>
+        <form id="post-form">
+            
+            <label for="secret-token">Access Token (Secret Password):</label>
+            <input type="password" id="secret-token" required placeholder="Enter the Kubernetes Secret Token">
+
+            <label for="title">Post Title (Optional):</label>
+            <input type="text" id="title" placeholder="Title of the new post">
+
+            <label for="image-url">Image Link (URL):</label>
+            <input type="text" id="image-url" required placeholder="Full URL of the image">
+
+            <label for="description">Post Description:</label>
+            <textarea id="description" rows="4" required placeholder="Brief description of the post"></textarea>
+
+            <button type="submit">Publish Post</button>
+        </form>
+
+        <div id="message"></div>
+    </div>
+
+    <script>
+        document.getElementById('post-form').addEventListener('submit', async function(event) {
+            event.preventDefault(); 
+            
+            const messageDiv = document.getElementById('message');
+            const tokenInput = document.getElementById('secret-token');
+
+            messageDiv.textContent = 'Sending...';
+            messageDiv.className = '';
+            
+            // Reset visual feedback on token input before sending
+            tokenInput.classList.remove('token-success', 'token-error');
+
+            const token = tokenInput.value;
+            const title = document.getElementById('title').value;
+            const imageUrl = document.getElementById('image-url').value;
+            const description = document.getElementById('description').value;
+
+            try {
+                const response = await fetch('/api/feed', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}` 
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        image_url: imageUrl,
+                        description: description
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    // Success message updated
+                    messageDiv.textContent = result.message || 'Post published successfully!';
+                    messageDiv.className = 'success';
+                    
+                    // VISUAL FEEDBACK: SUCCESS (Blue)
+                    tokenInput.classList.add('token-success');
+                    
+                    // Clear post fields (except token)
+                    document.getElementById('title').value = '';
+                    document.getElementById('image-url').value = '';
+                    document.getElementById('description').value = '';
+                } else if (response.status === 401) {
+                    // Authentication error message updated
+                    messageDiv.textContent = 'Authentication Error: Invalid Access Token.';
+                    messageDiv.className = 'error';
+                    
+                    // VISUAL FEEDBACK: ERROR (Red)
+                    tokenInput.classList.add('token-error');
+                } else {
+                    // General error message updated
+                    messageDiv.textContent = `Error posting: ${result.error || 'Unknown error'}`;
+                    messageDiv.className = 'error';
+                    
+                    // Assume error if token is not the direct cause
+                    tokenInput.classList.add('token-error');
+                }
+
+            } catch (error) {
+                console.error('Network or connection error:', error);
+                // Network error message updated
+                messageDiv.textContent = 'Network error. Could not connect to the server.';
+                messageDiv.className = 'error';
+                tokenInput.classList.add('token-error');
+            }
+        });
+    </script>
+</body>
+</html>

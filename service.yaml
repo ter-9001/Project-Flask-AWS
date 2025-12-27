@@ -1,0 +1,17 @@
+# 1. Definimos o tipo de recurso: Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-project-public-service
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+    service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+spec:
+  selector:
+    app: images-app
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80         
+      targetPort: 5000
+      nodePort: 

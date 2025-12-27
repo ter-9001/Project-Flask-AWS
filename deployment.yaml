@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-project-deployment
+  labels:
+    app: images-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: images-app
+  template:
+    metadata:
+      labels:
+        app: images-app
+    spec:
+      containers:
+      - name: flask-project-container
+        image: 779310096771.dkr.ecr.us-east-1.amazonaws.com/flask-app-aws:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: FEED_SECRET_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: flask-secret-token
+              key: FEED_SECRET_TOKEN
+        resources: 
+          limits:
+            memory: "128Mi"
+            cpu: "500m"

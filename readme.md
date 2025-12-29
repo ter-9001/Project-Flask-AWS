@@ -9,7 +9,7 @@ This project demonstrates the deployment of a simple Flask API (simulating a Fee
 The architecture uses ECR to store the Docker image and a Load Balancer (ELB/ALB) to expose the service publicly.
 
   
-Yu can acess the live project here: (Link)[http://aa83ae8c279a34ebb889a45fb59a16e5-92d20c333289700c.elb.us-east-1.amazonaws.com/]
+Yu can acess the live project here: [Link](http://aa83ae8c279a34ebb889a45fb59a16e5-92d20c333289700c.elb.us-east-1.amazonaws.com/)
 
 ---
 
